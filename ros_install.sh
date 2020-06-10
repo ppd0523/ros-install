@@ -16,6 +16,6 @@ sudo apt-get install -y ros-kinetic-desktop-full && \
 
 echo "source $HOME/.rosrc" >> ~/.bashrc && \
 cp -p .rosrc $HOME && \
-sudo rosdep && \
+sudo rosdep init && \
 rosdep update && \
 echo "--- Install Finished! ---"
