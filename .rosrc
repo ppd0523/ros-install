@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------
+# 이 스크립트는 ROS의 환경변수, 기능을 생성합니다.
+# 
+# $ rosup
+#
+# 위의 명령어로 아래 기능을 수행합니다.
+# 
+# 순서
+# ROS Master의 IP 설정
+# ROS Master의 PORT 설정
+# ROS_MASTER_URI 설정
+# catkin_make_all 함수 생성. 등록된 모든 Workspace에서 catkin_make하는 함수
+# ROS_SETUP_FLAG 세움. ROS환경이 갖춰졌다는 것을 알림
+# ROS 기본 설정
+# ROS의 패키지 경로 설정. (roscd 로 접근할 수 있는 패키지 경로)
+# ROS의 Workspace 경로 설정
+# -----------------------------------------------------------------------
+function rosup(){
+
+################### User setting ####################
+  DISTRO=kinect
+  export ROS_IP=127.0.0.1
+  export ROS_PORT=11311
+  export ROS_MASTER_URI=http://$ROS_IP:$ROS_PORT
+  
+  #export ROS_PKG_PATH=
+
+  #export ROS_WS=$ROS_WS:/my/another/path
+#####################################################
+
+  # ROS_SETUP_FLAG 선언 안 되어있거나 값이 1인 경우
+  if [ ! -v ROS_SETUP_FLAG ] || [ $ROS_SETUP_FLAG -eq 0 ]; then
+    export ROS_SETUP_FLAG=0
+  fi
+  
+  # ROS_WS 를 ':'으로 분할하고 순회하면서 빌드하는 함수
+  function catkin_make_all(){
+    oldpath=$PWD    # 빌드 후 복귀할 경로 저장
+    
+    paths=$(echo $ROS_WS | tr ":" "\n")   # ':'으로 분리
+    for path in $paths
+    do
+        echo "cd $path"
+        cd $path && catkin_make $@
+    done
+    
+    echo "cd $oldpath"
+    cd $oldpath  # 처음 경로로 복귀
+  }
+  function cm(){
+    catkin_make_all $@
+  }
+  
+  # ROS_SETUP_FLAG 값이 0이면 진입
+  if [ $ROS_SETUP_FLAG -eq 0 ]; then
+    ROS_SETUP_FLAG=1
+    PS1="(ROS) $PS1"
+
+    # ROS 기본 설정
+    echo "ROS $DISTRO setup"
+    source /opt/ros/$DISTRO/setup.bash
+
+    # ROS pkg path 추가
+    paths=$(echo $ROS_PKG_PATH | tr ":" "\n")   # ':'으로 분리
+    for path in $paths
+    do
+      if [ -d $path ]; then
+        echo "Setup ROS package path : $path"
+        source $path/setup.bash --extend
+      else
+        echo "ROS package path : NOT found $path/setup.bash"
+        # echo "$path/setup.bash - not found"
+      fi
+    done
+
+    # ROS workspace 추가
+    paths=$(echo $ROS_WS | tr ":" "\n")   # ':'으로 분리
+    for path in $paths
+    do
+      if [ -d $path ]; then
+        echo "Setup ROS workspace : $path"
+        source $path/devel/setup.bash --extend
+      else
+        echo "ROS workspace : NOT found $path/devel/setup.bash"
+        # echo "$path/devel/setup.bash - not found"
+      fi
+    done
+
+  fi
+}
