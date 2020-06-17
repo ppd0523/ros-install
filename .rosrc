@@ -3,24 +3,25 @@
 # -----------------------------------------------------------------------
 # 이 스크립트는 ROS의 환경변수, 기능을 생성합니다.
 # 
-# $ rosup
-#
-# 위의 명령어로 아래 기능을 수행합니다.
+# $ 명령어
+# $ rosup : 현재 쉘을 ROS kinetic 환경으로 설정한다.
+# $ catkin_make_all : 모든 ROS worksapce 경로에서 catkin_make을 수행한다
+# $ cm : catkin_make_all 과 동일
 # 
-# 순서
-# ROS Master의 IP 설정
-# ROS Master의 PORT 설정
-# ROS_MASTER_URI 설정
-# catkin_make_all 함수 생성. 등록된 모든 Workspace에서 catkin_make하는 함수
-# ROS_SETUP_FLAG 세움. ROS환경이 갖춰졌다는 것을 알림
-# ROS 기본 설정
-# ROS의 패키지 경로 설정. (roscd 로 접근할 수 있는 패키지 경로)
-# ROS의 Workspace 경로 설정
+# rosup
+# 1) ROS Master의 IP 설정
+# 2) ROS Master의 PORT 설정
+# 3) ROS_MASTER_URI 설정
+# 4) catkin_make_all 함수 생성. 등록된 모든 Workspace에서 catkin_make하는 함수
+# 5) ROS_SETUP_FLAG 세움. shell prompt 에 ROS 문구 추가
+# 6) ROS 기본 설정
+# 7) ROS의 패키지 경로 설정. (roscd 로 접근할 수 있는 패키지 경로)
+# 8) ROS의 Workspace 경로 설정
 # -----------------------------------------------------------------------
 function rosup(){
 
 ################### User setting ####################
-  DISTRO=kinect
+  DISTRO=kinetic
   export ROS_IP=127.0.0.1
   export ROS_PORT=11311
   export ROS_MASTER_URI=http://$ROS_IP:$ROS_PORT
