@@ -5,7 +5,11 @@
 ros_install.sh
 ```
 
-
+Install and Setup
+```bash
+$ sudo su
+$ sh ros_install.sh username
+```
 
 ### ros_install.sh
 

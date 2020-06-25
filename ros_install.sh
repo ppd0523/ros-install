@@ -1,21 +1,30 @@
 #!/bin/bash
 
+INSTALL_USER=$1
+
+if [ ! -e /home/$INSTALL_USER ]; then
+  echo "-- Not fount: /home/$INSTALL_USER --"
+  exit 0
+fi
+
 # Dependency
-sudo apt update && \
-sudo apt install -y git-core vim curl python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+apt update && \
+apt install -y git-core vim curl python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
 
 # Setup sources.list
-sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
-sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
-sudo apt update && \
+sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
+apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
+apt update && \
 
-sudo apt-get install -y ros-kinetic-desktop-full && \
-#sudo apt-get install -y ros-kinetic-desktop && \
-#sudo apt-get install -y ros-kinetic-ros-base && \
+apt-get install -y ros-kinetic-desktop-full && \
+#apt-get install -y ros-kinetic-desktop && \
+#apt-get install -y ros-kinetic-ros-base && \
 
 
-echo "source $HOME/.rosrc" >> ~/.bashrc && \
-cp -p .rosrc $HOME && \
-sudo rosdep init && \
+PWD=dirname $0
+
+echo "source /home/$INSTALL_USER/.rosrc" >> /home/$INSTALL_USER/.bashrc && \
+cp -p $PWD/.rosrc /home/$INSTALL_USER && \
+rosdep init && \
 rosdep update && \
 echo "--- Install Finished! ---"
