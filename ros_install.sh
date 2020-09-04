@@ -9,7 +9,7 @@ fi
 
 # Dependency
 apt update && \
-apt install -y git-core vim curl python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+apt install -y openssh-server git vim curl tree cmake g++ python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
 
 # Setup sources.list
 sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
